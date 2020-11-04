@@ -14,18 +14,11 @@
     docker-compose exec php-cli bash
     
     
-3.Запуск composer:
+3.Запуск скрипта сборки:
 
 
-    composer install
-    
-    
-4.Выполняем миграции:
-
-
-    php artisan migrate
-    
-    
+    bash configure.sh
+       
 
 Использование
 -----
