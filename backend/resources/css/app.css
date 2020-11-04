@@ -1,0 +1,4 @@
+.row-fluid {
+    display: flex;
+    justify-content: center;
+}

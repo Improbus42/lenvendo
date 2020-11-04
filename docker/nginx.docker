@@ -1,0 +1,5 @@
+FROM nginx:1.15
+
+ADD ./docker/nginx/web.conf /etc/nginx/conf.d/web.conf
+ADD ./docker/nginx/content.conf /etc/nginx/conf.d/content.conf
+WORKDIR /var/www/

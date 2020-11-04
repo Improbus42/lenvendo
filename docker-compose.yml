@@ -1,0 +1,60 @@
+version: '3.4'
+services:
+  nginx:
+    build:
+      context: ./
+      dockerfile: docker/nginx.docker
+    ports:
+      - "${NGINX_OUTER_PORT}:88"
+    links:
+      - php-fpm
+    volumes:
+      - ./backend:/var/www:cached
+  php-fpm:
+    build:
+      context: ./
+      dockerfile: docker/php-fpm.docker
+    links:
+      - mysql
+    volumes:
+      - ./backend:/var/www:cached
+    environment:
+      - "DB_PORT=3306"
+      - "DB_HOST=mysql"
+      - "DB_NAME=lion"
+      - "DB_USERNAME=lion"
+      - "DB_PASSWORD=secret"
+  php-cli:
+    build:
+      context: ./
+      dockerfile: docker/php-cli.docker
+    volumes:
+      - ./backend:/var/www:cached
+    environment:
+      - "DB_PORT=3306"
+      - "DB_HOST=mysql"
+      - "DB_NAME=lion"
+      - "DB_USERNAME=lion"
+      - "DB_PASSWORD=secret"
+    links:
+      - mysql
+    working_dir: /var/www/
+    tty: true
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - ./storage/docker/mysql:/var/lib/mysql:cached
+      - ./storage/docker/dump.sql.gz:/dump.sql.gz:cached
+    environment:
+      - "MYSQL_ROOT_PASSWORD=secret"
+      - "MYSQL_USER=lion"
+      - "MYSQL_PASSWORD=secret"
+      - "MYSQL_DATABASE=lion"
+    ports:
+      - "${MYSQL_OUTER_PORT}:3306"
+  node:
+    image: node:12
+    volumes:
+      - ./backend:/var/www
+    working_dir: /var/www
+    tty: true
