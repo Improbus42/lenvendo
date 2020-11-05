@@ -21,6 +21,10 @@ class DataController extends Controller
         if (!$validUrl) {
             return back()->with('valid', 'Введите валидный адрес сайта');
         }
+        $file_headers = @get_headers($validUrl);
+        if(!$file_headers || $file_headers[0] == 'HTTP/1.1 404 Not Found') {
+            return back()->with('valid', 'Введите валидный адрес сайта');
+        }
         $project_id_exist = Bookmark::where('url', $url)->first();
         if ($project_id_exist) {
             return back()->with('error', 'Данный URL уже используется');
